@@ -25,7 +25,7 @@ function DashboardScreen({ navigation, temperature, humidity, lastUpdate }) {
       <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
       <ScrollView contentContainerStyle={styles.screen}>
         <Text style={styles.title}>Dashboard IoT</Text>
-        <Text style={styles.subtitle}>Datos simulados de temperatura y humedad (Guía #7).</Text>
+        <Text style={styles.subtitle}>Datos simulados de temperatura y humedad (uuu).</Text>
 
         <View style={styles.card}>
           <Text style={styles.cardLabel}>Temperatura</Text>

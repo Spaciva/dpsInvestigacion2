@@ -1,112 +1,96 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Camera, CameraType } from 'expo-camera';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { useSensorData } from '@/providers/sensor-provider';
 
-export default function TabTwoScreen() {
+export default function ARScreen() {
+  const { temperature, humidity, lastUpdate } = useSensorData();
+  const [permission, setPermission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setPermission(status === 'granted');
+    })();
+  }, []);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <ThemedText type="title" style={styles.title}>
+        Realidad Aumentada
+      </ThemedText>
+      <ThemedText style={styles.caption}>
+        Cámara trasera con overlay de datos IoT en tiempo real.
+      </ThemedText>
+
+      <View style={styles.cameraWrapper}>
+        {permission === null ? (
+          <ActivityIndicator size="large" color="#0A84FF" />
+        ) : permission === false ? (
+          <ThemedText>Permiso de cámara denegado. Activa la cámara y reinicia la app.</ThemedText>
+        ) : (
+          <Camera style={styles.camera} type={CameraType.back}>
+            <View style={styles.overlayCard} pointerEvents="none">
+              <ThemedText type="subtitle" style={styles.overlayTitle}>
+                Sensor AR
+              </ThemedText>
+              <ThemedText style={styles.overlayText}>Temperatura: {temperature.toFixed(1)}°C</ThemedText>
+              <ThemedText style={styles.overlayText}>Humedad: {humidity.toFixed(1)}%</ThemedText>
+              <ThemedText style={styles.overlayNote}>Actualizado: {lastUpdate}</ThemedText>
+            </View>
+          </Camera>
+        )}
+      </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  title: {
+    marginBottom: 8,
+  },
+  caption: {
+    marginBottom: 16,
+    color: '#6B7280',
+  },
+  cameraWrapper: {
+    flex: 1,
+    borderRadius: 24,
+    overflow: 'hidden',
+    backgroundColor: '#000',
+  },
+  camera: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  overlayCard: {
+    margin: 20,
+    padding: 16,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.18)',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 18,
+    elevation: 6,
+  },
+  overlayTitle: {
+    marginBottom: 8,
+  },
+  overlayText: {
+    fontSize: 18,
+    marginBottom: 6,
+  },
+  overlayNote: {
+    marginTop: 8,
+    color: '#D1D5DB',
   },
 });

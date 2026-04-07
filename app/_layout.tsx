@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { SensorProvider } from '@/providers/sensor-provider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
@@ -14,10 +15,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
+      <SensorProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        </Stack>
+      </SensorProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );

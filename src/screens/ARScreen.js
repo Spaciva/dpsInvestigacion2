@@ -1,59 +1,77 @@
-import { useFocusEffect } from "@react-navigation/native";
-import { CameraView, useCameraPermissions } from "expo-camera";
-import { useCallback } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import styles from "../styles/appStyles";
+import { StyleSheet } from "react-native";
 
-export default function ARScreen({ temperature, humidity, lastUpdate }) {
-  const [permission, requestPermission] = useCameraPermissions();
+export default StyleSheet.create({
+  root: { flex: 1, backgroundColor: "#F8FAFC" },
+  header: { backgroundColor: "#0F172A" },
+  safeArea: { flex: 1, backgroundColor: "#F8FAFC" },
+  screen: { padding: 20 },
+  title: { fontSize: 32, fontWeight: "800", color: "#0F172A" },
+  subtitle: { fontSize: 16, color: "#475569", marginBottom: 20 },
+  card: {
+    borderRadius: 22,
+    backgroundColor: "#FFFFFF",
+    padding: 22,
+    marginBottom: 18,
+    elevation: 5,
+  },
+  cardAlt: { backgroundColor: "#FEF3C7" },
+  cardLabel: { fontSize: 16, color: "#475569" },
+  cardValue: { fontSize: 44, fontWeight: "800" },
+  cardNote: { marginTop: 10, color: "#64748B" },
+  button: {
+    backgroundColor: "#0284C7",
+    borderRadius: 18,
+    padding: 16,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonSecondary: { backgroundColor: "#0F172A" },
+  buttonText: { color: "#FFF", fontWeight: "700" },
+  permissionContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0F172A",
+  },
+  permissionText: { color: "#FFF", marginBottom: 20 },
+  cameraScreen: { flex: 1 },
+  camera: { flex: 1 },
+  overlay: {
+    position: "absolute",
+    bottom: 24,
+    left: 16,
+    right: 16,
+    backgroundColor: "rgba(15, 23, 42, 0.8)",
+    padding: 18,
+    borderRadius: 22,
+  },
+  overlayTitle: { color: "#7CFF58", fontWeight: "800" },
+  overlayText: { color: "#FFF", fontSize: 18 },
+  overlayNote: { color: "#CBD5E1", fontSize: 12 },
 
-  useFocusEffect(
-    useCallback(() => {
-      const askPermission = async () => {
-        if (!permission?.granted) {
-          await requestPermission();
-        }
-      };
-      askPermission();
-    }, [permission, requestPermission]),
-  );
-
-  if (!permission) {
-    return (
-      <View style={styles.permissionContainer}>
-        <ActivityIndicator size="large" color="#34D399" />
-      </View>
-    );
-  }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>Permiso de cámara denegado.</Text>
-        <TouchableOpacity style={styles.button} onPress={requestPermission}>
-          <Text style={styles.buttonText}>Reintentar permiso</Text>
-        </TouchableOpacity>
-        {!permission.canAskAgain && (
-          <Text style={[styles.permissionText, { marginTop: 12 }]}>
-            Abre la configuración si no puedes solicitar el permiso otra vez.
-          </Text>
-        )}
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.cameraScreen}>
-      <CameraView style={styles.camera} facing="back">
-        <View style={styles.overlay}>
-          <Text style={styles.overlayTitle}>Sensor ()</Text>
-          <Text style={styles.overlayText}>
-            Temp: {temperature.toFixed(1)}°C
-          </Text>
-          <Text style={styles.overlayText}>Hum: {humidity.toFixed(1)}%</Text>
-          <Text style={styles.overlayNote}>Sincronizado: {lastUpdate}</Text>
-        </View>
-      </CameraView>
-    </View>
-  );
-}
+  // 🔹 Estilos para botones de selección de ubicación
+  selectorButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#CBD5E1",
+    margin: 5,
+    backgroundColor: "#F1F5F9",
+    minWidth: 120,
+    alignItems: "center",
+  },
+  selectorButtonSelected: {
+    backgroundColor: "#2563EB",
+    borderColor: "#1E40AF",
+  },
+  selectorButtonText: {
+    fontSize: 14,
+    color: "#334155",
+    fontWeight: "500",
+  },
+  selectorButtonTextSelected: {
+    color: "#FFF",
+    fontWeight: "700",
+  },
+});

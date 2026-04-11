@@ -1,9 +1,10 @@
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import MetricCard from "../components/MetricCard";
 import styles from "../styles/appStyles";
@@ -17,6 +18,8 @@ export default function DashboardScreen({
   lastUpdate,
   onManualUpdate,
   onNavigateToAR,
+  onChangeLocation,
+  availableLocations,
 }) {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -41,6 +44,37 @@ export default function DashboardScreen({
         />
 
         <MetricCard label="Estado del sensor" value={status} />
+
+        {/* Selector de ubicación */}
+        <View style={{ marginVertical: 20 }}>
+          <Text style={styles.subtitle}>Selecciona ubicación del sensor:</Text>
+          <View
+            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}
+          >
+            {availableLocations.map((loc) => {
+              const isSelected = location === loc;
+              return (
+                <TouchableOpacity
+                  key={loc}
+                  style={[
+                    styles.selectorButton,
+                    isSelected && styles.selectorButtonSelected,
+                  ]}
+                  onPress={() => onChangeLocation(loc)}
+                >
+                  <Text
+                    style={[
+                      styles.selectorButtonText,
+                      isSelected && styles.selectorButtonTextSelected,
+                    ]}
+                  >
+                    {loc}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
 
         <TouchableOpacity style={styles.button} onPress={onManualUpdate}>
           <Text style={styles.buttonText}>Actualizar</Text>

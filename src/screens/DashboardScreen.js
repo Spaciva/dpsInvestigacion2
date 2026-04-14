@@ -3,7 +3,7 @@ import {
     ScrollView,
     StatusBar,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
 } from "react-native";
 import MetricCard from "../components/MetricCard";
 import styles from "../styles/appStyles";
@@ -16,6 +16,7 @@ export default function DashboardScreen({
   status,
   lastUpdate,
   onManualUpdate,
+  onNavigateToAR,
 }) {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -47,7 +48,7 @@ export default function DashboardScreen({
 
         <TouchableOpacity
           style={[styles.button, styles.buttonSecondary]}
-          onPress={() => navigation.navigate("AR View")}
+          onPress={() => onNavigateToAR(navigation)}
         >
           <Text style={styles.buttonText}>Ir a Realidad Aumentada</Text>
         </TouchableOpacity>

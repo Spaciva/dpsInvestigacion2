@@ -9,8 +9,13 @@ export default function ARScreen({ temperature, humidity, lastUpdate }) {
 
   useFocusEffect(
     useCallback(() => {
-      requestPermission();
-    }, [requestPermission]),
+      const askPermission = async () => {
+        if (!permission?.granted) {
+          await requestPermission();
+        }
+      };
+      askPermission();
+    }, [permission, requestPermission]),
   );
 
   if (!permission) {

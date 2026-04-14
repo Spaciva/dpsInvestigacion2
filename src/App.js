@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { useCameraPermissions } from "expo-camera";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useSensorData from "./hooks/useSensorData";
 import ARScreen from "./screens/ARScreen";
@@ -10,6 +11,19 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const { sensorProps, updateData } = useSensorData();
+  const [permission, requestPermission] = useCameraPermissions();
+
+  const handleGoToAR = async (navigation) => {
+    if (permission?.granted) {
+      navigation.navigate("AR View");
+      return;
+    }
+
+    const response = await requestPermission();
+    if (response.granted) {
+      navigation.navigate("AR View");
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -26,6 +40,7 @@ export default function App() {
                 {...props}
                 {...sensorProps}
                 onManualUpdate={updateData}
+                onNavigateToAR={handleGoToAR}
               />
             )}
           </Stack.Screen>

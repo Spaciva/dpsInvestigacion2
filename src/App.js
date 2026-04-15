@@ -10,7 +10,8 @@ import styles from "./styles/appStyles";
 const Stack = createStackNavigator();
 
 export default function App() {
-  const { sensorProps, updateData } = useSensorData();
+  const { sensorProps, updateData, setLocation, availableLocations } =
+    useSensorData();
   const [permission, requestPermission] = useCameraPermissions();
 
   const handleGoToAR = async (navigation) => {
@@ -41,6 +42,8 @@ export default function App() {
                 {...sensorProps}
                 onManualUpdate={updateData}
                 onNavigateToAR={handleGoToAR}
+                onChangeLocation={setLocation}
+                availableLocations={availableLocations}
               />
             )}
           </Stack.Screen>

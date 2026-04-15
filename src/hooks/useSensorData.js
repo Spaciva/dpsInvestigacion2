@@ -10,9 +10,17 @@ const simulateSensorData = (currentLocation) => ({
 });
 
 export default function useSensorData() {
+  const availableLocations = [
+    "Laboratorio A",
+    "Laboratorio B",
+    "Invernadero",
+    "Biblioteca",
+    "Sala de servidores",
+  ];
+
   const [temperature, setTemperature] = useState(24.2);
   const [humidity, setHumidity] = useState(58.7);
-  const [location, setLocation] = useState("Laboratorio A");
+  const [location, setLocation] = useState(availableLocations[0]);
   const [status, setStatus] = useState("Activo");
   const [lastUpdate, setLastUpdate] = useState(new Date().toLocaleTimeString());
 
@@ -35,5 +43,5 @@ export default function useSensorData() {
     [temperature, humidity, location, status, lastUpdate],
   );
 
-  return { sensorProps, updateData, setLocation };
+  return { sensorProps, updateData, setLocation, availableLocations };
 }

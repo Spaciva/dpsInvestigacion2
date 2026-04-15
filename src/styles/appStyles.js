@@ -23,6 +23,7 @@ export default StyleSheet.create({
     borderRadius: 18,
     padding: 16,
     alignItems: "center",
+    marginTop: 10,
   },
   buttonSecondary: { backgroundColor: "#0F172A" },
   buttonText: { color: "#FFF", fontWeight: "700" },
@@ -47,4 +48,30 @@ export default StyleSheet.create({
   overlayTitle: { color: "#7CFF58", fontWeight: "800" },
   overlayText: { color: "#FFF", fontSize: 18 },
   overlayNote: { color: "#CBD5E1", fontSize: 12 },
+
+  // 🔹 Estilos para botones de selección de ubicación
+  selectorButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#CBD5E1",
+    margin: 5,
+    backgroundColor: "#F1F5F9",
+    minWidth: 120,
+    alignItems: "center",
+  },
+  selectorButtonSelected: {
+    backgroundColor: "#2563EB",
+    borderColor: "#1E40AF",
+  },
+  selectorButtonText: {
+    fontSize: 14,
+    color: "#334155",
+    fontWeight: "500",
+  },
+  selectorButtonTextSelected: {
+    color: "#FFF",
+    fontWeight: "700",
+  },
 });
